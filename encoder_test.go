@@ -1,4 +1,4 @@
-package slack_md
+package md
 
 import (
 	"fmt"

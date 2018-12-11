@@ -1,4 +1,4 @@
-package slack_md
+package md
 
 type Marshaler interface {
 	MarshalSlackMD() ([]byte, error)
