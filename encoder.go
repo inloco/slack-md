@@ -17,6 +17,27 @@ var (
 	marshalerType = reflect.TypeOf(new(Marshaler)).Elem()
 )
 
+// Marshal returns the Slack Markdown encoding of v.
+//
+// Marshal traverses the value v recursively, similar to
+// how encoding/json does.
+//
+// Struct field names will be printed in bold. Values will
+// follow the default Golang enconding, except for pointers,
+// which will be automatically dereferenced, and for objects
+// implementing the Marshaler interface.
+//
+// Two tags are provided to facilitate proper serilializing.
+//
+//   // Field is ignored by this package.
+//   Field int `json:"-"`
+//
+//   // Field appears, but at most the last 4 characters are shown
+//   Field int `json:"obfuscate"`
+//
+// Those tags will preventing sensitive that from showing in your
+// Slack channels.
+//
 func Marshal(v interface{}) ([]byte, error) {
 	return marshal(
 		v,
