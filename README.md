@@ -22,4 +22,7 @@ type MyUser struct {
 
 ### How it will show up on your Slack channel
 
-
+* Field names as bold text, proper idented
+* Fields tagged with `-` ignored
+* Fields tagged with `obfuscate` showing just last chars
+* Fields re-implementing Marshaler having their custom serializing printed
