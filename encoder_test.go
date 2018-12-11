@@ -3,36 +3,32 @@ package slack_md
 import (
 	"fmt"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestMarshalGoDefault(t *testing.T) {
 	input := []string{"value_one"}
 	marshaled, err := Marshal(input)
-	if !assert.NoError(t, err) {
-		return
+	if err != nil {
+		t.FailNow()
 	}
 
-	assert.EqualValues(
-		t,
-		fmt.Sprintf("%v", input),
-		marshaled,
-	)
+	expected := fmt.Sprintf("%v", input)
+	if expected != string(marshaled) {
+		t.Fail()
+	}
 }
 
 func TestMarshalString(t *testing.T) {
 	input := "value_one"
 	marshaled, err := Marshal(input)
-	if !assert.NoError(t, err) {
-		return
+	if err != nil {
+		t.FailNow()
 	}
 
-	assert.EqualValues(
-		t,
-		input,
-		marshaled,
-	)
+	expected := input
+	if expected != string(marshaled) {
+		t.Fail()
+	}
 }
 
 type CustomMarshaling struct{}
@@ -43,42 +39,39 @@ func (t CustomMarshaling) MarshalSlackMD() ([]byte, error) {
 func TestMarshalMarshaler(t *testing.T) {
 	input := CustomMarshaling{}
 	marshaled, err := Marshal(input)
-	if !assert.NoError(t, err) {
-		return
+	if err != nil {
+		t.FailNow()
 	}
 
-	assert.EqualValues(
-		t,
-		"custom marshaling",
-		marshaled,
-	)
+	expected := "custom marshaling"
+	if expected != string(marshaled) {
+		t.Fail()
+	}
 }
 
 func TestMarshalValidPointer(t *testing.T) {
 	input := "value_one"
 	marshaled, err := Marshal(&input)
-	if !assert.NoError(t, err) {
-		return
+	if err != nil {
+		t.FailNow()
 	}
 
-	assert.EqualValues(
-		t,
-		input,
-		marshaled,
-	)
+	expected := input
+	if expected != string(marshaled) {
+		t.Fail()
+	}
 }
 func TestMarshalNullPointer(t *testing.T) {
 	var input *string
 	marshaled, err := Marshal(input)
-	if !assert.NoError(t, err) {
-		return
+	if err != nil {
+		t.FailNow()
 	}
 
-	assert.EqualValues(
-		t,
-		"null",
-		marshaled,
-	)
+	expected := "null"
+	if expected != string(marshaled) {
+		t.Fail()
+	}
 }
 
 type MyStruct struct {
@@ -98,11 +91,9 @@ func TestMarshalStruct(t *testing.T) {
 
 	marshaled, _ := Marshal(input)
 
-	assert.EqualValues(
-		t,
-		expected,
-		marshaled,
-	)
+	if expected != string(marshaled) {
+		t.Fail()
+	}
 }
 
 type InnerStruct struct {
@@ -135,13 +126,11 @@ func TestMarshalMultiLevelStruct(t *testing.T) {
 		*InnerStruct*: null`
 
 	marshaled, err := Marshal(input)
-	if !assert.NoError(t, err) {
-		return
+	if err != nil {
+		t.FailNow()
 	}
 
-	assert.EqualValues(
-		t,
-		expected,
-		marshaled,
-	)
+	if expected != string(marshaled) {
+		t.Fail()
+	}
 }
